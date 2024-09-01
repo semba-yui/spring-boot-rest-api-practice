@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="profiles" source="spring.profiles.active"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <springProfile name="local">
+                <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            </springProfile>
+            <providers>
+                <pattern>
+                    <omitEmptyFields>true</omitEmptyFields>
+                    <pattern>
+                        {
+                        "timestamp": "%d",
+                        "logger": "%logger",
+                        "method": "%logger.%M",
+                        "level": "%level",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "profile": "${profiles}",
+                        "stackTrace": "%ex"
+                        }
+                    </pattern>
+                </pattern>
+                <mdc/>
+            </providers>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

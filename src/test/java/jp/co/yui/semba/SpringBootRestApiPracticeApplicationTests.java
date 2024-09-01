@@ -1,9 +1,9 @@
-package jp.co.yui.semba.spring_boot_rest_api_practice;
+package jp.co.yui.semba;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = SpringBootRestApiPracticeApplicationTests.class)
 class SpringBootRestApiPracticeApplicationTests {
 
 	@Test
