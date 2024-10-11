@@ -1,7 +1,7 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.3"
-    id("io.spring.dependency-management") version "1.1.6"
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
 }
 
 group = "jp.co.yui.semba"
@@ -56,4 +56,27 @@ dependencyManagement {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+// Git ハッシュを取得
+val gitCommit: String by lazy {
+    val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD")
+        .redirectErrorStream(true)
+        .start()
+    process.inputStream.bufferedReader().use { it.readText().trim() }
+}
+
+tasks.named<Jar>("bootJar") {
+    manifest {
+        attributes(
+            "Git-Commit" to gitCommit,
+            "App-Version" to project.version
+        )
+    }
+}
+
+tasks.named<ProcessResources>("processResources") {
+    filesMatching("**/application.properties") {
+        expand("gitCommit" to gitCommit, "appVersion" to project.version)
+    }
 }
